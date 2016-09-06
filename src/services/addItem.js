@@ -1,7 +1,6 @@
-let addItem = (req, connection, cb) => {
-    console.log(req.body.item_name, req.body.list_name, req.user.id, req.body.comments);
+let addItem = (req, user, connection, cb) => {
     connection.query('INSERT INTO items(item_name, list_name, user_pk, comments, checked) VALUES( ? , ? , ? , ?, 0)',
-        [ req.body.item_name, req.body.list_name, req.user.id, req.body.comments ],
+        [ req.body.item_name, req.body.list_name, user.id, req.body.comments ],
         (err, sql) => {
             err ? console.log(err) : cb(null, JSON.stringify({ item_id: sql.insertId }));
         }

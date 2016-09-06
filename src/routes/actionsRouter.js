@@ -8,17 +8,20 @@ let addItem         = require('../services/addItem');
 let removeItem      = require('../services/removeItem');
 let removeList      = require('../services/removeList');
 let toggleCheck     = require('../services/toggleCheck');
+let jwt             = require('jsonwebtoken');
+let jwtSecret       = require('../../.jwtSecret').secret;
 
 let router = (connection) => {
 
     actionsRouter.use(bodyParser.json());
 
     actionsRouter.post('/addItem',
-        passport.authenticate('local'),
         (req, res) => {
-            console.log(req.user, req.body);
-            addItem(req, connection, (err, data) => {
-                err ? res.status(500).send() : res.status(200).send(data);
+            jwt.verify(req.body.token, jwtSecret, (err, user) => {
+                if (err) return res.status(403).send();
+                addItem(req, user, connection, (err, data) => {
+                    err ? res.status(500).send() : res.status(200).send(data);
+                });
             });
         }
     );

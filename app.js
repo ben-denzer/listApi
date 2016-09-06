@@ -10,6 +10,9 @@ let bodyParser      = require('body-parser');
 let mysql           = require('mysql');
 let dbinfo          = require('./.dbinfo');
 let connection      = mysql.createConnection(dbinfo);
+let morgan          = require('morgan');
+
+app.use(morgan('dev'));
 
 app.use((req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*");
