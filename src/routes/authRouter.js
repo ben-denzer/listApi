@@ -11,13 +11,6 @@ let jwt             = require('jsonwebtoken');
 let createToken     = require('../services/createToken');
 
 let router = (connection) => {
-    authRouter.post('/',
-        jsonParser,
-        passport.authenticate('local'),
-        (req, res) => {
-            res.status(200).send(JSON.stringify(req.user));
-        }
-    );
 
     authRouter.post('/signup', jsonParser, (req, res) => {
         let username = req.body.username;
@@ -26,15 +19,17 @@ let router = (connection) => {
         signUpLogic(username, password, connection, (err, user) => {
             if (err) return res.status(500).send(err);
             if (user.error) return res.status(403).send(JSON.stringify({error: 'username is taken'}));
-            req.login(user, () => res.send(JSON.stringify(user)));
+            req.login(user, () => {
+                createToken(user, (err, token) => {
+                    if (err) return res.status(500).send(err);
+                    res.send(JSON.stringify({token}));
+                });
+            });
         });
     });
 
-    authRouter.post('/login',
-        jsonParser,
-        passport.authenticate('local'),
-        (req, res) => {
-            createToken(req.user, connection, (err, token) => {
+    authRouter.post('/login', jsonParser, passport.authenticate('local'), (req, res) => {
+            createToken(req.user, (err, token) => {
                 if (err) res.status(500).send(err);
                 getAllItems(req.user.id, connection, (err, lists) => {
                     if (err) return res.status(500).send(err);

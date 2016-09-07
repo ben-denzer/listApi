@@ -15,45 +15,42 @@ let router = (connection) => {
 
     actionsRouter.use(bodyParser.json());
 
-    actionsRouter.post('/addItem',
-        (req, res) => {
-            jwt.verify(req.body.token, jwtSecret, (err, user) => {
-                if (err) return res.status(403).send();
-                addItem(req, user, connection, (err, data) => {
-                    err ? res.status(500).send() : res.status(200).send(data);
-                });
+    actionsRouter.post('/addItem', (req, res) => {
+        jwt.verify(req.body.token, jwtSecret, (err, user) => {
+            if (err) return res.status(403).send();
+            addItem(req, user, connection, (err, data) => {
+                err ? res.status(500).send() : res.status(200).send(data);
             });
-        }
-    );
+        });
+    });
 
-    actionsRouter.post('/removeItem',
-        passport.authenticate('local'),
-        (req, res) => {
+    actionsRouter.post('/removeItem', (req, res) => {
+        jwt.verify(req.body.token, jwtSecret, (err, user) => {
+            if (err) return res.status(403).send();
             removeItem(req, connection, (err, data) => {
-                console.log(data);
                 err ? res.status(500).send() : res.status(200).send(data);
             });
-        }
-    );
+        });
+    });
 
-    actionsRouter.post('/removeList',
-        passport.authenticate('local'),
-        (req, res) => {
-            console.log(req);
-            removeList(req, connection, (err, data) => {
+    actionsRouter.post('/removeList', (req, res) => {
+        jwt.verify(req.body.token, jwtSecret, (err, user) => {
+            if (err) return res.status(403).send();
+            removeList(req, user, connection, (err, data) => {
                 err ? res.status(500).send() : res.status(200).send(data);
             });
-        }
-    );
+        });
+    });
 
-    actionsRouter.post('/toggleCheck',
-        passport.authenticate('local'),
-        (req, res) => {
+    actionsRouter.post('/toggleCheck', (req, res) => {
+        console.log('in route', req.body.token);
+        jwt.verify(req.body.token, jwtSecret, (err, user) => {
+            if (err) return res.status(403).send();
             toggleCheck(req, connection, (err, data) => {
                 err ? res.status(500).send(err) : res.status(200).send(data);
             });
-        }
-    );
+        });
+    });
 
     return actionsRouter;
 }

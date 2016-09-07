@@ -1,7 +1,7 @@
 const jwt       = require('jsonwebtoken');
 const jwtSecret = require('../../.jwtSecret').secret;
 
-const createToken = (user, connection, cb) => {
+const createToken = (user, cb) => {
     if (!user) return cb('no user');
     cb(null,
         jwt.sign(
