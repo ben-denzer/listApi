@@ -23,10 +23,10 @@ app.use((req, res, next) => {
 passportConfig(app, connection);
 
 let authRouter = require('./src/routes/authRouter')(connection);
-app.use('/auth', authRouter);
+app.use('/listApi/auth', authRouter);
 
 let actionsRouter = require('./src/routes/actionsRouter')(connection);
-app.use('/actions', actionsRouter);
+app.use('/listApi/actions', actionsRouter);
 
 app.listen(port, (err) => {
     if (err) console.error(err);
