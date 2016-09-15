@@ -9,6 +9,7 @@ let passport        = require('passport');
 let getAllItems     = require('../services/getAllItems');
 let jwt             = require('jsonwebtoken');
 let createToken     = require('../services/createToken');
+let jwtSecret       = require('../../.jwtSecret').secret;
 
 let router = (connection) => {
 
@@ -38,6 +39,16 @@ let router = (connection) => {
             });
         }
     );
+
+    authRouter.post('/loginWithToken', jsonParser, (req, res) => {
+        jwt.verify(req.body.token, jwtSecret, (err, user) => {
+            if (err) return res.status(403).send();
+            getAllItems(user.id, connection, (err, lists) => {
+                if (err) return res.status(500).send(err);
+                res.status(200).send(JSON.stringify({lists}));
+            });
+        });
+    });
 
     authRouter.post('/checkUsername', jsonParser, (req, res) => {
         connection.query('SELECT u.user_id FROM users u WHERE u.username = ?',
