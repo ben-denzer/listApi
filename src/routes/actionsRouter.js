@@ -43,7 +43,6 @@ let router = (connection) => {
     });
 
     actionsRouter.post('/toggleCheck', (req, res) => {
-        console.log('in route', req.body.token);
         jwt.verify(req.body.token, jwtSecret, (err, user) => {
             if (err) return res.status(403).send();
             toggleCheck(req, connection, (err, data) => {
