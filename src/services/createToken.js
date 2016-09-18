@@ -10,7 +10,7 @@ const createToken = (user, cb) => {
                 id: user.id
             },
             jwtSecret,
-            {expiresIn: '10m'}
+            {}
         )
     );
 };
