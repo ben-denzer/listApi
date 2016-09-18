@@ -5,7 +5,7 @@ let actionsRouter   = express.Router();
 let bodyParser      = require('body-parser');
 let passport        = require('passport');
 let addItem         = require('../services/addItem');
-let removeItem      = require('../services/removeItem');
+let removeItems     = require('../services/removeItems');
 let removeList      = require('../services/removeList');
 let toggleCheck     = require('../services/toggleCheck');
 let jwt             = require('jsonwebtoken');
@@ -24,10 +24,10 @@ let router = (connection) => {
         });
     });
 
-    actionsRouter.post('/removeItem', (req, res) => {
+    actionsRouter.post('/removeItems', (req, res) => {
         jwt.verify(req.body.token, jwtSecret, (err, user) => {
             if (err) return res.status(403).send();
-            removeItem(req, connection, (err, data) => {
+            removeItems(req, connection, (err, data) => {
                 err ? res.status(500).send() : res.status(200).send(data);
             });
         });
